@@ -1,0 +1,87 @@
+from random import randint
+
+board = []
+
+for x in range(0, 5):
+  board.append(["O"] * 5)
+
+#Print board without list markings
+def print_board(board):
+  for row in board:
+    print " ".join(row)
+
+#Welcome and printing board
+print "Welcome, please guess where my ship is on this board:"
+print "You can guess 4 times"
+print
+print_board(board)
+
+#Functions placing ship randomly on board
+def random_row(board):
+  return randint(1, len(board))
+
+def random_col(board):
+  return randint(1, len(board[0]))
+
+ship_row_1 = random_row(board)
+ship_col_1 = random_col(board)
+ship_row_2 = random_row(board)
+ship_col_2 = random_col(board)
+
+if (ship_row_2 == ship_row_1) and (ship_col_2 == ship_col_1):
+  ship_row_2 = random_row(board)
+  ship_col_2 = random_col(board)
+print ship_row_1
+print ship_col_1
+print ship_row_2
+print ship_col_2
+print
+
+#Printing turn number and asking for guesses
+for turn in range(4):
+  if ((board[ship_row_1 - 1][ship_col_1 - 1] == "S") and (board[ship_row_2 - 1][ship_col_2 - 1] == "S")):
+    print
+    print "Congratulations! You sank both of my battleships."
+    break
+  print
+  print "Turn", turn + 1
+  guess_row = int(raw_input("Guess Row: "))
+  guess_col = int(raw_input("Guess Col: "))
+#Correct guess
+  
+  if (board[guess_row - 1][guess_col - 1] == "S"):
+    print
+    print "That ship has already been found"
+    print
+    print_board(board)
+  else:
+    if ((guess_row == ship_row_1 and guess_col == ship_col_1) or (guess_row == ship_row_2 and guess_col == ship_col_2)):
+      print
+      print "Congratulations! You sank a battleship!"
+      board[guess_row - 1][guess_col - 1] = "S"
+      print
+      print_board(board)
+#Guess off board
+    else:
+      if guess_row not in range(1, 6) or \
+        guess_col not in range(1, 6):
+        print
+        print "Oops, that's not even in the ocean."
+#Already guessed
+      elif board[guess_row - 1][guess_col - 1] == "X":
+        print
+        print( "You guessed that one already." )
+      #Wrong guess
+      else:
+        print
+        print "You missed my battleship!"
+        print
+        board[guess_row - 1][guess_col - 1] = "X"
+#Game over
+      if (turn == 3):
+        board[ship_row_1 - 1][ship_col_1 - 1] = "S"
+        print
+        print "Game Over"
+      
+      print
+      print_board(board)
